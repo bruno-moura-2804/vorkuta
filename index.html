@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vorkuta - Cidade das Sombras</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #e0e0e0;
+            --accent: #8b0000;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --aurora-1: #0d324d;
+            --aurora-2: #7f5a83;
+            --aurora-3: #0f2027;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background 1.5s ease;
+        }
+        
+        /* Aurora Borealis Background */
+        .aurora-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+        
+        .aurora-active {
+            opacity: 0.3;
+        }
+        
+        .snowfall {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+        
+        /* Audio Player */
+        .audio-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(10, 10, 10, 0.7);
+            padding: 10px 15px;
+            border-radius: 30px;
+            backdrop-filter: blur(5px);
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+        
+        .audio-player:hover {
+            transform: translateY(-5px);
+        }
+        
+        .audio-btn {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .audio-btn:hover {
+            color: var(--accent);
+        }
+        
+        .audio-text {
+            font-size: 0.8rem;
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+        
+        .audio-player:hover .audio-text {
+            opacity: 1;
+            width: 100px;
+        }
+        
+        header {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            overflow: hidden;
+        }
+        
+        .header-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)), url('https://i.imgur.com/QMnxpgF.jpeg') no-repeat center center/cover;
+            z-index: -1;
+            filter: brightness(0.7);
+        }
+        
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 1.5s forwards 0.5s;
+        }
+        
+        .subtitle {
+            font-weight: 300;
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            max-width: 800px;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 1.5s forwards 1s;
+        }
+        
+        .scroll-down {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--light);
+            font-size: 1.5rem;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            opacity: 0;
+            animation: fadeIn 1s forwards 1.5s, bounce 2s infinite 2.5s;
+        }
+        
+        section {
+            padding: 5rem 2rem;
+            position: relative;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.5s ease;
+        }
+        
+        .section-title:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: var(--darker);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .card-img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+            filter: grayscale(30%) contrast(110%);
+            transition: filter 0.3s ease;
+        }
+        
+        .card:hover .card-img {
+            filter: grayscale(0%) contrast(120%);
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background: var(--accent);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -1px;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+        
+        .timeline-content {
+            padding: 20px;
+            background: var(--darker);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        
+        .timeline-date {
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+            top: 20px;
+            z-index: 1;
+        }
+        
+        .timeline-item:nth-child(odd)::after {
+            right: -10px;
+        }
+        
+        .timeline-item:nth-child(even)::after {
+            left: -10px;
+        }
+        
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            padding: 2rem;
+        }
+        
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            height: 250px;
+            cursor: pointer;
+            filter: brightness(0.8);
+            transition: filter 0.3s ease, transform 0.3s ease;
+        }
+        
+        .gallery-item:hover {
+            filter: brightness(1);
+            transform: scale(1.03);
+            z-index: 2;
+        }
+        
+        .gallery-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .gallery-item:hover .gallery-img {
+            transform: scale(1.1);
+        }
+        
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 1rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item:hover .gallery-caption {
+            transform: translateY(0);
+        }
+        
+        /* Cultura Section */
+        .culture-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .culture-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+        
+        /* Food Section */
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .food-item {
+            background: var(--darker);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        
+        .food-name {
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        /* Gulag Section */
+        .gulag-testimony {
+            background: var(--darker);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 3px solid var(--accent);
+            position: relative;
+        }
+        
+        .testimony-author {
+            font-style: italic;
+            text-align: right;
+            margin-top: 1rem;
+            color: var(--accent);
+        }
+        
+        /* Curiosidades */
+        .fun-fact {
+            background: var(--darker);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .fun-fact::before {
+            content: '❄';
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            opacity: 0.2;
+            font-size: 3rem;
+        }
+        
+        footer {
+            background: var(--darker);
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .social-link {
+            color: var(--light);
+            font-size: 1.5rem;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        
+        .social-link:hover {
+            color: var(--accent);
+            transform: translateY(-3px);
+        }
+        
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0) translateX(-50%);
+            }
+            40% {
+                transform: translateY(-20px) translateX(-50%);
+            }
+            60% {
+                transform: translateY(-10px) translateX(-50%);
+            }
+        }
+        
+        @keyframes aurora {
+            0% {
+                transform: rotate(0deg) scale(1.2);
+            }
+            50% {
+                transform: rotate(2deg) scale(1.3);
+            }
+            100% {
+                transform: rotate(0deg) scale(1.2);
+            }
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+            
+            .timeline-item::after {
+                left: 21px;
+            }
+            
+            .timeline-item:nth-child(odd)::after {
+                right: auto;
+            }
+            
+            .audio-player {
+                bottom: 10px;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Aurora Borealis Background -->
+    <canvas id="aurora-bg" class="aurora-bg"></canvas>
+    
+    <div class="snowfall" id="snowfall"></div>
+    
+    <!-- Audio Player -->
+    <div class="audio-player">
+        <button class="audio-btn" id="audioToggle">🔊</button>
+        <span class="audio-text">Áudio Ambiente</span>
+        <audio id="ambientAudio" loop>
+            <source src="neve.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+    
+    
+    <header>
+        <div class="header-bg"></div>
+        <h1>VORKUTA</h1>
+        <p class="subtitle">A cidade perdida no círculo polar ártico, onde o sol não nasce por meses e as sombras se alongam eternamente</p>
+        <div class="scroll-down" id="scrollDown">↓</div>
+    </header>
+    
+    <section id="about">
+        <h2 class="section-title">A Cidade das Sombras</h2>
+        <div class="content-grid">
+            <div class="card">
+                <img src="https://i.imgur.com/lRssPXw.jpeg" alt="Vorkuta no inverno" class="card-img">
+                <div class="card-content">
+                    <h3 class="card-title">Geografia Ártica</h3>
+                    <p>Localizada a 140km ao norte do Círculo Polar Ártico, Vorkuta é uma das cidades mais isoladas e frias da Rússia. Com temperaturas que podem chegar a -50°C no inverno, a cidade é envolta em escuridão por meses durante o inverno polar.</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <img src="https://i.imgur.com/Lanbtty.jpeg" alt="Minas de carvão" class="card-img">
+                <div class="card-content">
+                    <h3 class="card-title">Herança das Minas</h3>
+                    <p>Fundada como um campo de trabalho forçado do Gulag na década de 1930, Vorkuta cresceu em torno de suas minas de carvão. Mesmo após o fechamento dos campos, a mineração continuou sendo o coração da cidade até o colapso da União Soviética.</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <img src="https://i.imgur.com/FLM6vPE.jpeg" alt="Prédios abandonados" class="card-img">
+                <div class="card-content">
+                    <h3 class="card-title">Declínio Urbano</h3>
+                    <p>Com a queda da URSS, Vorkuta entrou em rápido declínio. Bairros inteiros foram abandonados, e a população encolheu de mais de 200 mil para menos de 60 mil habitantes. Hoje, ruínas de prédios soviéticos pontuam a paisagem congelada.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="https://i.imgur.com/XMCWXDI.jpeg" alt="Trilhos para lugar nenhum" class="card-img">
+                <div class="card-content">
+                    <h3 class="card-title">O legado do sofrimento</h3>
+                    <p>As ferrovias que um dia trouxeram prisioneiros do Gulag agora estão cobertas de neve e ferrugem. Eram trilhos que não levavam à liberdade, mas ao trabalho forçado nas profundezas geladas da terra. Ainda hoje, o som dos vagões é substituído apenas pelo eco do vento.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="history" style="background: var(--darker);">
+        <h2 class="section-title">Linha do Tempo Sombria</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date">1931</div>
+                    <p>Descoberta de grandes depósitos de carvão na região de Vorkuta pelo geólogo Georgy Chernov.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date">1932</div>
+                    <p>Estabelecimento do campo de trabalho Vorkutlag como parte do sistema Gulag. Prisioneiros começam a ser enviados para a região.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date">1943</div>
+                    <p>Vorkuta recebe status de cidade. No auge, o complexo de campos Vorkutlag abrigava mais de 70.000 prisioneiros.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date">1953</div>
+                    <p>Revolta de Vorkuta - uma das maiores rebeliões no sistema Gulag, brutalmente reprimida pelo governo soviético.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date">1960</div>
+                    <p>Fechamento oficial do Vorkutlag, embora muitos ex-prisioneiros permaneçam na cidade como trabalhadores livres.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date">1991</div>
+                    <p>Queda da União Soviética leva ao colapso da indústria de carvão e início do declínio populacional acelerado.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="gulag">
+        <h2 class="section-title">Ecos do Gulag</h2>
+        <div class="content-grid">
+            <div class="card">
+                <img src="https://i.imgur.com/XcsSMiS.jpeg" alt="Campo de trabalho" class="card-img">
+                <div class="card-content">
+                    <h3 class="card-title">Vorkutlag</h3>
+                    <p>O complexo de campos de trabalho Vorkutlag foi um dos mais severos do sistema Gulag. Os prisioneiros trabalhavam em minas de carvão em condições desumanas, com temperaturas que podiam chegar a -50°C no inverno.</p>
+                </div>
+            </div>
+            
+            <div class="gulag-testimony">
+                <p>"Nós trabalhávamos 12 horas por dia, sete dias por semana, em túneis escavados no permafrost. A cada turno, alguém morria - de frio, fome, exaustão ou violência dos guardas. Os corpos eram deixados na neve até a primavera."</p>
+                <p class="testimony-author">- Ivan Petrov, prisioneiro político (1945-1953)</p>
+            </div>
+            
+            <div class="card">
+                <img src="https://i.imgur.com/0B9emlw.jpeg" alt="Estação de trem" class="card-img">
+                <div class="card-content">
+                    <h3 class="card-title">A Ferrovia da Morte</h3>
+                    <p>Construída por prisioneiros entre 1937-1941, a ferrovia para Vorkuta ficou conhecida como "A Estrada dos Ossos". Estima-se que um prisioneiro morria para cada dormente colocado nos trilhos.</p>
+                </div>
+            </div>
+
+            <div class="gulag-testimony">
+                <p>"Trabalhávamos sob a mira de fuzis, enterrando trilhos sobre a tundra congelada. Cada dormente escondia um corpo — de fome, frio ou brutalidade. A ferrovia não foi construída com madeira e aço, mas com vidas."</p>
+                <p class="testimony-author">- Alexei Morozov, ex-prisioneiro de Vorkuta (1939-1945)</p>
+            </div>
+        </div>
+    </section>
+    
+    <section id="culture" style="background: var(--darker);">
+        <h2 class="section-title">Vida em Vorkuta</h2>
+        <div class="content-grid">
+            <div class="culture-item">
+                <div class="culture-icon">🏘️</div>
+                <h3>Sobrevivência Cotidiana</h3>
+                <p>Os moradores de Vorkuta enfrentam temperaturas extremas que podem chegar a -50°C no inverno. A cidade, quase isolada, depende de suprimentos trazidos por trem ou avião, e muitos bairros foram abandonados após o colapso da União Soviética.</p>
+            </div>
+            
+            <div class="culture-item">
+                <div class="culture-icon">🎧</div>
+                <h3>Cultura Urbana Soviética</h3>
+                <p>A cultura local é marcada por heranças soviéticas: murais desbotados, arquitetura brutalista e canções antigas tocadas em rádios enferrujados. A nostalgia do passado divide espaço com a luta diária por calor e abrigo.</p>
+            </div>
+            
+            <div class="culture-item">
+                <div class="culture-icon">🛠️</div>
+                <h3>Trabalho e Desemprego</h3>
+                <p>Antiga cidade mineradora, Vorkuta entrou em declínio após o fechamento das minas de carvão. Hoje, muitos sobrevivem com trabalhos estatais, aposentadorias ou migram para outras regiões, deixando para trás prédios vazios e fábricas em ruínas.</p>
+            </div>
+            
+            <div class="culture-item">
+                <div class="culture-icon">🚶</div>
+                <h3>Resistência Silenciosa</h3>
+                <p>Viver em Vorkuta é um ato de resistência. As pessoas que permanecem ali enfrentam o isolamento, o frio e o esquecimento com uma dignidade silenciosa — entre trens que quase não chegam e noites que parecem eternas.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section id="food">
+        <h2 class="section-title">Culinária Ártica</h2>
+        <div class="food-grid">
+            <div class="food-item">
+                <h3 class="food-name">Stroganina</h3>
+                <p>Peixe cru congelado (geralmente salmão branco ou muksun) cortado em finas lâminas. Consumido ainda gelado, com sal grosso e vodka.</p>
+            </div>
+            
+            <div class="food-item">
+                <h3 class="food-name">Sopas Quentes</h3>
+                <p>Caldos densos feitos com carne de rena, peixe, raízes e cogumelos da tundra. A sopa de shchi (repolho fermentado) era comum nos campos do Gulag, servida rala e quase sem nutrientes.</p>
+            </div>
+            
+            <div class="food-item">
+                <h3 class="food-name">Pão Preto</h3>
+                <p>O pão escuro de centeio era a base da sobrevivência nos campos. Resistia semanas no frio intenso e, muitas vezes, era a única refeição de um dia inteiro.</p>
+            </div>
+            
+            <div class="food-item">
+                <h3 class="food-name">Chai Zavarka</h3>
+                <p>Chá preto extremamente forte e concentrado, adoçado e servido em pequenos copos de vidro. Era a principal fonte de calor e energia para trabalhadores nas minas e nos túneis congelados.</p>
+            </div>
+
+            <div class="food-item">
+                <h3 class="food-name">Pelmeni do Norte</h3>
+                <p>Bolinhos de massa recheados com carne de rena, alce ou peixe. Cozidos diretamente na neve derretida ou sobre fornos improvisados nos acampamentos. Eram raros nos campos, mas comuns entre os moradores locais em tempos de escassez.</p>
+            </div>
+
+            <div class="food-item">
+                <h3 class="food-name">Salo Congelado</h3>
+                <p>Gordura suína salgada e congelada, cortada em tiras finas e consumida crua. Era uma das poucas fontes de calorias acessíveis para suportar o frio extremo — especialmente valorizada entre mineradores e soldados.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section id="facts" style="background: var(--darker);">
+        <h2 class="section-title">Curiosidades Glaciais</h2>
+        <div class="content-grid">
+            <div class="fun-fact">
+                <h3>O Sol da Meia-Noite... ao Contrário</h3>
+                <p>Enquanto no verão Vorkuta experimenta o sol da meia-noite, no inverno ocorre o oposto - a "noite polar", onde o sol não nasce por 45 dias consecutivos.</p>
+            </div>
+            
+            <div class="fun-fact">
+                <h3>Cidade dos Extremos</h3>
+                <p>Vorkuta detém o recorde de maior variação de temperatura na Rússia: de -52°C no inverno a +33°C no verão - uma diferença de 85 graus!</p>
+            </div>
+            
+            <div class="fun-fact">
+                <h3>Arquitetura no Permafrost</h3>
+                <p>Todos os edifícios em Vorkuta são construídos sobre estacas para evitar que o calor derreta o permafrost e cause desmoronamentos.</p>
+            </div>
+            
+            <div class="fun-fact">
+                <h3>O Último Trem</h3>
+                <p>O trem para Vorkuta leva 48 horas desde Moscou e é um dos últimos na Rússia ainda usando locomotivas a diesel, não eletrificadas.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section id="gallery">
+        <h2 class="section-title">Gelida Melancolia</h2>
+        <div class="gallery">
+            <div class="gallery-item">
+                <img src="https://i.imgur.com/QJKJODf.jpeg" alt="Prédios abandonados" class="gallery-img">
+                <div class="gallery-caption">Bairros fantasmas de Vorkuta</div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://i.imgur.com/r7Vm9cO.jpeg" alt="Paisagem de inverno" class="gallery-img">
+                <div class="gallery-caption">Tundra congelada ao redor da cidade</div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://i.imgur.com/prrUSxe.jpeg" alt="Minas abandonadas" class="gallery-img">
+                <div class="gallery-caption">Restos da indústria de carvão</div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://i.imgur.com/eECSCm0.jpeg" alt="Arquitetura soviética" class="gallery-img">
+                <div class="gallery-caption">Monumentos ao trabalho socialista</div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://i.imgur.com/AX0ZduV.jpeg" alt="Aurora boreal" class="gallery-img">
+                <div class="gallery-caption">Auroras sobre a cidade</div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://i.imgur.com/82ova7P.jpeg" alt="Estação de trem" class="gallery-img">
+                <div class="gallery-caption">A linha férrea que liga Vorkuta ao mundo</div>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="footer-content">
+            <h3>VORKUTA - A CIDADE DAS SOMBRAS</h3>
+            <p>Um monumento ao tempo congelado, à história esquecida e à resiliência humana em face do extremo.</p>
+            <div class="social-links">
+                <a href="https://github.com/bruno-moura-2804" class="social-link" target="_blank">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/bruno-henrique2804" class="social-link" target="_blank">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="https://www.instagram.com/bh.moura28?igsh=cmY1d2kyZ3pheDhl" class="social-link" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+            
+        
+            <p>&copy; 2025 Bruno Moura. Todos os direitos congelados</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Efeito de neve
+        function createSnow() {
+            const snowfall = document.getElementById('snowfall');
+            const snowflakes = 100;
+            
+            for (let i = 0; i < snowflakes; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.innerHTML = '❄';
+                snowflake.style.position = 'absolute';
+                snowflake.style.color = 'rgba(255, 255, 255, 0.8)';
+                snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+                snowflake.style.top = '-20px';
+                snowflake.style.left = Math.random() * window.innerWidth + 'px';
+                snowflake.style.opacity = Math.random();
+                snowflake.style.animation = `fall ${Math.random() * 5 + 5}s linear infinite`;
+                snowflake.style.animationDelay = Math.random() * 5 + 's';
+                snowfall.appendChild(snowflake);
+                
+                // Adiciona animação de queda
+                const keyframes = `
+                    @keyframes fall {
+                        to {
+                            transform: translateY(${window.innerHeight}px) rotate(360deg);
+                        }
+                    }
+                `;
+                const style = document.createElement('style');
+                style.innerHTML = keyframes;
+                document.head.appendChild(style);
+            }
+        }
+        
+        // Aurora Borealis Effect
+        function createAurora() {
+            const canvas = document.getElementById('aurora-bg');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            // Aurora colors
+            const colors = [
+                {r: 13, g: 50, b: 77},   // Dark blue
+                {r: 127, g: 90, b: 131},  // Purple
+                {r: 15, g: 32, b: 39}     // Dark teal
+            ];
+            
+            // Animation variables
+            let time = 0;
+            const layers = [];
+            
+            // Create aurora layers
+            for (let i = 0; i < 3; i++) {
+                layers.push({
+                    points: [],
+                    color: colors[i],
+                    speed: 0.002 + Math.random() * 0.001,
+                    curve: 5 + Math.random() * 10,
+                    offset: Math.random() * 100
+                });
+                
+                // Generate initial points
+                for (let j = 0; j <= 20; j++) {
+                    layers[i].points.push({
+                        x: j * (canvas.width / 20),
+                        y: canvas.height / 2 + Math.sin(j) * 50 - 100 + i * 30
+                    });
+                }
+            }
+            
+            // Animation loop
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                time += 0.005;
+                
+                layers.forEach((layer, index) => {
+                    // Update points
+                    layer.points.forEach((point, i) => {
+                        const ratio = i / layer.points.length;
+                        point.y = canvas.height / 2 + 
+                                 Math.sin(time * layer.speed + ratio * layer.curve + layer.offset) * 100 - 
+                                 100 + index * 30;
+                    });
+                    
+                    // Draw aurora
+                    ctx.beginPath();
+                    ctx.moveTo(0, canvas.height);
+                    ctx.lineTo(0, layer.points[0].y);
+                    
+                    layer.points.forEach((point, i) => {
+                        const next = layer.points[i + 1];
+                        if (next) {
+                            const cpx = (point.x + next.x) / 2;
+                            const cpy = (point.y + next.y) / 2;
+                            ctx.quadraticCurveTo(point.x, point.y, cpx, cpy);
+                        }
+                    });
+                    
+                    ctx.lineTo(canvas.width, layer.points[layer.points.length - 1].y);
+                    ctx.lineTo(canvas.width, canvas.height);
+                    
+                    // Create gradient
+                    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                    gradient.addColorStop(0, `rgba(${layer.color.r}, ${layer.color.g}, ${layer.color.b}, 0.8)`);
+                    gradient.addColorStop(1, `rgba(${layer.color.r}, ${layer.color.g}, ${layer.color.b}, 0)`);
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.fill();
+                });
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+            
+            // Handle resize
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+        
+        // Audio Player
+        function setupAudio() {
+            const audioToggle = document.getElementById('audioToggle');
+            const audio = document.getElementById('ambientAudio');
+            let isPlaying = false;
+            
+            audio.volume = 0.3; // Set lower volume
+            
+            audioToggle.addEventListener('click', () => {
+                if (isPlaying) {
+                    audio.pause();
+                    audioToggle.textContent = '🔇';
+                } else {
+                    audio.play();
+                    audioToggle.textContent = '🔊';
+                }
+                isPlaying = !isPlaying;
+            });
+        }
+        
+        // Scroll transitions
+        function setupScrollTransitions() {
+            const auroraBg = document.querySelector('.aurora-bg');
+            const sections = document.querySelectorAll('section');
+            let lastScroll = 0;
+            
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                const windowHeight = window.innerHeight;
+                
+                // Aurora activation
+                if (scrollY > windowHeight * 0.5) {
+                    auroraBg.classList.add('aurora-active');
+                } else {
+                    auroraBg.classList.remove('aurora-active');
+                }
+                
+                // Section background transitions
+                sections.forEach(section => {
+                    const rect = section.getBoundingClientRect();
+                    const sectionTop = rect.top;
+                    const sectionBottom = rect.bottom;
+                    
+                    if (sectionTop < windowHeight * 0.7 && sectionBottom > windowHeight * 0.3) {
+                        if (section.id === 'culture' || section.id === 'facts') {
+                            document.body.style.background = 'var(--aurora-3)';
+                        } else if (section.id === 'gallery') {
+                            document.body.style.background = 'var(--aurora-1)';
+                        } else {
+                            document.body.style.background = 'var(--dark)';
+                        }
+                    }
+                });
+                
+                lastScroll = scrollY;
+            });
+        }
+        
+        // Scroll suave
+        document.getElementById('scrollDown').addEventListener('click', () => {
+            window.scrollBy({
+                top: window.innerHeight - 100,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Animação ao scroll
+        function animateOnScroll() {
+            const cards = document.querySelectorAll('.card');
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            const cultureItems = document.querySelectorAll('.culture-item');
+            const funFacts = document.querySelectorAll('.fun-fact');
+            
+            cards.forEach(card => {
+                const cardPosition = card.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if (cardPosition < screenPosition) {
+                    card.classList.add('visible');
+                }
+            });
+            
+            timelineItems.forEach(item => {
+                const itemPosition = item.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if (itemPosition < screenPosition) {
+                    item.classList.add('visible');
+                }
+            });
+            
+            cultureItems.forEach(item => {
+                const itemPosition = item.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if (itemPosition < screenPosition) {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }
+            });
+            
+            funFacts.forEach(fact => {
+                const factPosition = fact.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if (factPosition < screenPosition) {
+                    fact.style.opacity = '1';
+                    fact.style.transform = 'translateY(0)';
+                }
+            });
+        }
+        
+        // Initialize everything
+        window.addEventListener('load', () => {
+            createSnow();
+            createAurora();
+            setupAudio();
+            setupScrollTransitions();
+            
+            // Inicia algumas animações já visíveis na carga
+            setTimeout(() => {
+                animateOnScroll();
+            }, 500);
+        });
+        
+        window.addEventListener('scroll', animateOnScroll);
+    </script>
+</body>
+</html>
