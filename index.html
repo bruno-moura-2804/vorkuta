@@ -109,12 +109,13 @@
         header {
             position: relative;
             height: 100vh;
+            min-height: 500px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 2rem;
+            padding: 1rem;
             overflow: hidden;
         }
         
@@ -130,10 +131,10 @@
         }
         
         h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-size: clamp(2rem, 8vw, 4rem);
             margin-bottom: 1rem;
             text-transform: uppercase;
-            letter-spacing: 5px;
+            letter-spacing: 3px;
             opacity: 0;
             transform: translateY(20px);
             animation: fadeIn 1.5s forwards 0.5s;
@@ -141,9 +142,9 @@
         
         .subtitle {
             font-weight: 300;
-            font-size: clamp(1rem, 2vw, 1.5rem);
-            max-width: 800px;
-            margin-bottom: 2rem;
+            font-size: clamp(0.9rem, 3vw, 1.5rem);
+            max-width: 90%;
+            margin: 0 auto 2rem;
             opacity: 0;
             transform: translateY(20px);
             animation: fadeIn 1.5s forwards 1s;
@@ -151,7 +152,7 @@
         
         .scroll-down {
             position: absolute;
-            bottom: 30px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             color: var(--light);
@@ -163,14 +164,14 @@
         }
         
         section {
-            padding: 5rem 2rem;
+            padding: 3rem 1rem;
             position: relative;
         }
         
         .section-title {
             text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            margin-bottom: 2rem;
             position: relative;
             display: inline-block;
             left: 50%;
@@ -197,8 +198,8 @@
         
         .content-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
             max-width: 1200px;
             margin: 0 auto;
         }
@@ -236,11 +237,11 @@
         }
         
         .card-content {
-            padding: 1.5rem;
+            padding: 1.2rem;
         }
         
         .card-title {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             margin-bottom: 0.5rem;
             color: var(--accent);
         }
@@ -249,7 +250,7 @@
             position: relative;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem 0;
+            padding: 1rem 0;
         }
         
         .timeline::after {
@@ -259,14 +260,13 @@
             background: var(--accent);
             top: 0;
             bottom: 0;
-            left: 50%;
-            margin-left: -1px;
+            left: 31px;
         }
         
         .timeline-item {
-            padding: 10px 40px;
+            padding: 10px 40px 10px 70px;
             position: relative;
-            width: 50%;
+            width: 100%;
             opacity: 0;
             transform: translateX(-20px);
             transition: opacity 0.5s ease, transform 0.5s ease;
@@ -277,16 +277,8 @@
             transform: translateX(0);
         }
         
-        .timeline-item:nth-child(odd) {
-            left: 0;
-        }
-        
-        .timeline-item:nth-child(even) {
-            left: 50%;
-        }
-        
         .timeline-content {
-            padding: 20px;
+            padding: 15px;
             background: var(--darker);
             border-radius: 8px;
             box-shadow: var(--shadow);
@@ -306,29 +298,22 @@
             background: var(--accent);
             border-radius: 50%;
             top: 20px;
+            left: 21px;
             z-index: 1;
-        }
-        
-        .timeline-item:nth-child(odd)::after {
-            right: -10px;
-        }
-        
-        .timeline-item:nth-child(even)::after {
-            left: -10px;
         }
         
         .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 1rem;
-            padding: 2rem;
+            padding: 1rem;
         }
         
         .gallery-item {
             position: relative;
             overflow: hidden;
             border-radius: 8px;
-            height: 250px;
+            height: 200px;
             cursor: pointer;
             filter: brightness(0.8);
             transition: filter 0.3s ease, transform 0.3s ease;
@@ -357,9 +342,10 @@
             left: 0;
             right: 0;
             background: rgba(0, 0, 0, 0.7);
-            padding: 1rem;
+            padding: 0.8rem;
             transform: translateY(100%);
             transition: transform 0.3s ease;
+            font-size: 0.9rem;
         }
         
         .gallery-item:hover .gallery-caption {
@@ -372,25 +358,26 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
         }
         
         .culture-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
             color: var(--accent);
         }
         
         /* Food Section */
         .food-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
         }
         
         .food-item {
             background: var(--darker);
-            padding: 1.5rem;
+            padding: 1.2rem;
             border-radius: 8px;
             box-shadow: var(--shadow);
         }
@@ -398,14 +385,14 @@
         .food-name {
             color: var(--accent);
             margin-bottom: 0.5rem;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
         
         /* Gulag Section */
         .gulag-testimony {
             background: var(--darker);
-            padding: 2rem;
-            margin-bottom: 2rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
             border-left: 3px solid var(--accent);
             position: relative;
         }
@@ -415,12 +402,13 @@
             text-align: right;
             margin-top: 1rem;
             color: var(--accent);
+            font-size: 0.9rem;
         }
         
         /* Curiosidades */
         .fun-fact {
             background: var(--darker);
-            padding: 1.5rem;
+            padding: 1.2rem;
             margin-bottom: 1rem;
             border-radius: 8px;
             position: relative;
@@ -433,13 +421,13 @@
             right: 10px;
             top: 10px;
             opacity: 0.2;
-            font-size: 3rem;
+            font-size: 2.5rem;
         }
         
         footer {
             background: var(--darker);
             text-align: center;
-            padding: 2rem;
+            padding: 2rem 1rem;
             position: relative;
         }
         
@@ -451,13 +439,13 @@
         .social-links {
             display: flex;
             justify-content: center;
-            gap: 1.5rem;
-            margin: 1.5rem 0;
+            gap: 1.2rem;
+            margin: 1.2rem 0;
         }
         
         .social-link {
             color: var(--light);
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             transition: color 0.3s ease, transform 0.3s ease;
         }
         
@@ -497,33 +485,135 @@
             }
         }
         
-        /* Responsividade */
-        @media (max-width: 768px) {
-            .timeline::after {
-                left: 31px;
+        /* Responsividade para telas muito pequenas */
+        @media (max-width: 480px) {
+            header {
+                min-height: 400px;
+                padding: 1rem 0.5rem;
             }
             
-            .timeline-item {
-                width: 100%;
-                padding-left: 70px;
-                padding-right: 25px;
+            h1 {
+                font-size: 1.8rem;
+                letter-spacing: 2px;
             }
             
-            .timeline-item:nth-child(even) {
-                left: 0;
+            .subtitle {
+                font-size: 0.9rem;
             }
             
-            .timeline-item::after {
-                left: 21px;
+            section {
+                padding: 2rem 0.5rem;
             }
             
-            .timeline-item:nth-child(odd)::after {
-                right: auto;
+            .section-title {
+                font-size: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .content-grid, .food-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .gallery {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .card-img, .gallery-item {
+                height: 150px;
             }
             
             .audio-player {
                 bottom: 10px;
                 right: 10px;
+                padding: 8px 12px;
+            }
+            
+            .audio-btn {
+                font-size: 1.2rem;
+            }
+            
+            .timeline-item {
+                padding-left: 50px;
+                padding-right: 15px;
+            }
+            
+            .timeline-item::after {
+                width: 16px;
+                height: 16px;
+                left: 17px;
+            }
+            
+            .timeline::after {
+                left: 25px;
+            }
+        }
+        
+        /* Ajustes para tablets */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+            
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+            
+            .timeline::after {
+                left: 50%;
+            }
+            
+            .timeline-item {
+                width: 50%;
+                padding-left: 40px;
+                padding-right: 40px;
+            }
+            
+            .timeline-item:nth-child(odd) {
+                left: 0;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 50%;
+            }
+            
+            .timeline-item:nth-child(odd)::after {
+                right: -10px;
+                left: auto;
+            }
+            
+            .timeline-item:nth-child(even)::after {
+                left: -10px;
+            }
+        }
+        
+        /* Ajustes para telas maiores */
+        @media (min-width: 769px) {
+            .timeline::after {
+                left: 50%;
+            }
+            
+            .timeline-item {
+                width: 50%;
+                padding-left: 40px;
+                padding-right: 40px;
+            }
+            
+            .timeline-item:nth-child(odd) {
+                left: 0;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 50%;
+            }
+            
+            .timeline-item:nth-child(odd)::after {
+                right: -10px;
+                left: auto;
+            }
+            
+            .timeline-item:nth-child(even)::after {
+                left: -10px;
             }
         }
     </style>
@@ -542,7 +632,6 @@
             <source src="neve.mp3" type="audio/mpeg">
         </audio>
     </div>
-    
     
     <header>
         <div class="header-bg"></div>
@@ -777,6 +866,14 @@
                 <img src="https://i.imgur.com/82ova7P.jpeg" alt="Estação de trem" class="gallery-img">
                 <div class="gallery-caption">A linha férrea que liga Vorkuta ao mundo</div>
             </div>
+            <div class="gallery-item">
+                <img src="https://i.imgur.com/tsv3gA0.jpeg" alt="Neve pesada" class="gallery-img">
+                <div class="gallery-caption">Neve cobrindo os campos de Vorkuta</div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://i.imgur.com/NtQQJjI.jpeg" alt="Vorkuta à noite" class="gallery-img">
+                <div class="gallery-caption">A cidade iluminada durante a noite polar</div>
+            </div>
         </div>
     </section>
     
@@ -796,7 +893,6 @@
                 </a>
             </div>
             
-        
             <p>&copy; 2025 Bruno Moura. Todos os direitos congelados</p>
         </div>
     </footer>
